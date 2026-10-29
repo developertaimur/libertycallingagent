@@ -106,6 +106,15 @@ class Settings(BaseSettings):
         # Render injects RENDER_EXTERNAL_URL (https://….onrender.com)
         if not value:
             value = os.getenv("RENDER_EXTERNAL_URL", "").strip().rstrip("/")
+        # Koyeb injects KOYEB_PUBLIC_DOMAIN (hostname only)
+        if not value:
+            domain = os.getenv("KOYEB_PUBLIC_DOMAIN", "").strip().rstrip("/")
+            if domain:
+                value = (
+                    domain
+                    if domain.startswith("http://") or domain.startswith("https://")
+                    else f"https://{domain}"
+                )
         return value
 
     @property
