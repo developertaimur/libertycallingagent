@@ -1,0 +1,69 @@
+# Render Blueprint — https://dashboard.render.com/blueprints
+# After deploy: set secret env vars (sync: false) in the dashboard, then
+# point SignalWire SWML answer URL at:
+#   {API_URL}/api/dialer/swml-callback
+
+services:
+  - type: web
+    name: liberty-calling-api
+    runtime: python
+    plan: free
+    rootDir: signalwire-ai-dialer
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: USE_STREAMING_VOICE
+        value: "false"
+      - key: TRANSFER_RING_SECONDS
+        value: "25"
+      - key: TRANSFER_WHISPER_ENABLED
+        value: "true"
+      - key: TRANSFER_SEND_SMS_SUMMARY
+        value: "true"
+      - key: CARTESIA_VOICE_ID
+        value: a0e1205c-ed01-4186-a0e5-d0e325112376
+      - key: CARTESIA_MODEL_ID
+        value: sonic-turbo
+      - key: DEEPGRAM_STT_MODEL
+        value: nova-2
+      # SERVER_HOST_URL falls back to RENDER_EXTERNAL_URL in app config.
+      # Override only if you use a custom domain.
+      - key: SIGNALWIRE_PROJECT_ID
+        sync: false
+      - key: SIGNALWIRE_API_TOKEN
+        sync: false
+      - key: SIGNALWIRE_SPACE_URL
+        sync: false
+      - key: SIGNALWIRE_NUMBER
+        sync: false
+      - key: HUMAN_TRANSFER_NUMBER
+        sync: false
+      - key: HUMAN_TRANSFER_WEBSITE
+        sync: false
+      - key: HUMAN_TRANSFER_MARKETING
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+
+  - type: web
+    name: liberty-calling-web
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20.18.0"
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          name: liberty-calling-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL

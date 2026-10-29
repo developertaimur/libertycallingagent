@@ -1,6 +1,7 @@
 """Application settings loaded from environment / .env via Pydantic Settings."""
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -99,7 +100,12 @@ class Settings(BaseSettings):
     @classmethod
     def strip_trailing_slash(cls, value: object) -> object:
         if isinstance(value, str):
-            return value.strip().rstrip("/")
+            value = value.strip().rstrip("/")
+        else:
+            value = ""
+        # Render injects RENDER_EXTERNAL_URL (https://….onrender.com)
+        if not value:
+            value = os.getenv("RENDER_EXTERNAL_URL", "").strip().rstrip("/")
         return value
 
     @property
