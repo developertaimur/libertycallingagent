@@ -1,0 +1,12 @@
+fastapi>=0.110
+uvicorn[standard]>=0.30
+signalwire>=2.1.1
+pydantic>=2.0
+pydantic-settings>=2.0
+python-dotenv>=1.0
+gspread>=6.0
+google-auth>=2.0
+pytz>=2024.1
+httpx>=0.27
+websockets>=12.0
+# Optional Silero VAD: pip install torch (heavy) — energy VAD works without it

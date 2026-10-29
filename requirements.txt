@@ -1,0 +1,9 @@
+signalwire>=2.1.1
+signalwire-agents>=1.1.0
+python-dotenv>=1.0
+openpyxl>=3.1
+pydantic>=2.0
+uvicorn[standard]>=0.30
+fastapi>=0.110
+pytest>=8.0
+httpx>=0.27

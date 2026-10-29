@@ -1,0 +1,43 @@
+# Secrets & local env
+.env
+.env.*
+!.env.example
+!**/.env.example
+**/.env
+google-credentials.json
+**/google-credentials.json
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+.ruff_cache/
+
+# Node / Next.js
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+npm-debug.log*
+yarn-error.log*
+
+# App runtime data
+data/
+logs/
+*.db
+*.sqlite3
+signalwire-ai-dialer/data/
+signalwire-ai-dialer/logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.cursor/
+.vscode/
+*.swp

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jessica · Scalify Call</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;560;700&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --ink: #1c1914;
+      --muted: #6b6458;
+      --line: #d9d0c0;
+      --card: #fffdf8;
+      --ok: #2f6b4f;
+      --ok-bg: #e4f0e8;
+      --warn: #8a5a12;
+      --warn-bg: #f5ead3;
+      --accent: #1f4d3a;
+      --err: #8b2e2e;
+      --err-bg: #f3e0e0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Figtree, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #e8dfc8 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #d7e4dc 0%, transparent 50%),
+        var(--bg);
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 4rem;
+    }
+    .brand {
+      font-family: Newsreader, Georgia, serif;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.35rem;
+    }
+    .tagline {
+      margin: 0 0 2rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--ok-bg);
+      color: var(--ok);
+      font-size: 0.85rem;
+      font-weight: 560;
+      margin-bottom: 1.5rem;
+    }
+    .status::before {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 0 3px rgba(47, 107, 79, 0.2);
+    }
+    .status.warn {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+    .status.warn::before {
+      background: var(--warn);
+      box-shadow: 0 0 0 3px rgba(138, 90, 18, 0.18);
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    .panel h2 {
+      margin: 0 0 0.85rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 560;
+    }
+    dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 8.5rem 1fr;
+      gap: 0.55rem 1rem;
+      font-size: 0.98rem;
+    }
+    dt { color: var(--muted); }
+    dd { margin: 0; font-weight: 560; word-break: break-word; }
+    ul.tools {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.4rem;
+    }
+    ul.tools li {
+      padding: 0.55rem 0.7rem;
+      border-radius: 10px;
+      background: #f7f2e8;
+      font-size: 0.92rem;
+    }
+    ul.tools code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86rem;
+      color: var(--accent);
+    }
+    .form-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+    label {
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 560;
+    }
+    input {
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.7rem 0.85rem;
+    }
+    input:focus {
+      outline: 2px solid rgba(31, 77, 58, 0.25);
+      border-color: var(--accent);
+    }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    @media (max-width: 560px) {
+      .row-2 { grid-template-columns: 1fr; }
+    }
+    button.dial {
+      font: inherit;
+      font-weight: 560;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.1rem;
+      background: var(--accent);
+      color: var(--card);
+      justify-self: start;
+    }
+    button.dial:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .call-note {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    #call-result {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    #call-result.ok { display: block; background: var(--ok-bg); color: var(--ok); }
+    #call-result.err { display: block; background: var(--err-bg); color: var(--err); }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.25rem;
+    }
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--card);
+      background: var(--accent);
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      font-weight: 560;
+      font-size: 0.92rem;
+    }
+    a.btn.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .hint {
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="status {{status_class}}">{{status_label}}</p>
+    <h1 class="brand">Jessica</h1>
+    <p class="tagline">Scalify Agency voice agent — local runtime</p>
+
+    <section class="panel">
+      <h2>Place a test call</h2>
+      <p class="call-note">{{dial_note}}</p>
+      <form id="dial-form" class="form-grid">
+        <label>
+          Phone
+          <input id="phone" name="phone" type="tel" required
+                 value="{{test_number}}" placeholder="+17869848504" autocomplete="tel" />
+        </label>
+        <div class="row-2">
+          <label>
+            Lead name
+            <input id="name" name="name" type="text" value="Test Call" placeholder="Name" />
+          </label>
+          <label>
+            Business
+            <input id="business" name="business" type="text" value="Demo Co" placeholder="Company" />
+          </label>
+        </div>
+        <label>
+          Lead source
+          <input id="source" name="source" type="text" value="dashboard" placeholder="website / ads / …" />
+        </label>
+        <button class="dial" id="dial-btn" type="submit">Call now</button>
+        <div id="call-result" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Runtime</h2>
+      <dl>
+        <dt>Voice</dt><dd>{{voice}}</dd>
+        <dt>Port</dt><dd>{{port}}</dd>
+        <dt>Auth</dt><dd>{{auth_user}} · basic auth on</dd>
+        <dt>Public URL</dt><dd>{{proxy_url}}</dd>
+        <dt>Test mode</dt><dd>{{test_mode}}</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Tools</h2>
+      <ul class="tools">
+        {{tools_html}}
+      </ul>
+    </section>
+
+    <div class="actions">
+      <a class="btn" href="/swml.json">View SWML JSON</a>
+      <a class="btn secondary" href="/healthz">Health check</a>
+    </div>
+
+    <p class="hint">
+      With <strong>test mode on</strong>, every dial goes to <code>{{test_number}}</code>
+      even if you type another number. For Jessica to talk, set
+      <code>SWML_PROXY_URL_BASE</code> (ngrok) and point <code>AGENT_SIP</code> at that SWML URL.
+    </p>
+  </main>
+  <script>
+    // Chrome blocks fetch when the page URL is http://user:pass@host/...
+    // Capture auth from the URL, strip it from the address bar, then send Authorization.
+    let authUser = "";
+    let authPass = "";
+    try {
+      authUser = location.username || "";
+      authPass = location.password || "";
+      if (authUser || authPass) {
+        history.replaceState(null, "", location.pathname + location.search + location.hash);
+      }
+    } catch (_) { /* ignore */ }
+
+    function apiHeaders() {
+      const headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      };
+      if (authUser && authPass) {
+        headers["Authorization"] =
+          "Basic " + btoa(unescape(encodeURIComponent(authUser + ":" + authPass)));
+      }
+      return headers;
+    }
+
+    const form = document.getElementById("dial-form");
+    const btn = document.getElementById("dial-btn");
+    const result = document.getElementById("call-result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      result.className = "";
+      result.textContent = "";
+      btn.disabled = true;
+      btn.textContent = "Calling…";
+      try {
+        const body = {
+          phone: document.getElementById("phone").value.trim(),
+          name: document.getElementById("name").value.trim(),
+          business: document.getElementById("business").value.trim(),
+          source: document.getElementById("source").value.trim(),
+        };
+        const endpoint = new URL("/api/call", window.location.origin).toString();
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: apiHeaders(),
+          credentials: "same-origin",
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          result.className = "err";
+          result.textContent = data.error || ("Call failed (" + res.status + ")");
+        } else {
+          result.className = "ok";
+          result.textContent =
+            "Call placed.\n" +
+            "SID: " + (data.call_sid || "-") + "\n" +
+            "Status: " + (data.status || "-") + "\n" +
+            "Dialed: " + (data.dialed_to || "-") +
+            (data.test_mode ? "\n(TEST MODE active)" : "") +
+            "\nAnswer the phone — Jessica should start after pickup.";
+        }
+      } catch (err) {
+        result.className = "err";
+        result.textContent = String(err && err.message ? err.message : err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Call now";
+      }
+    });
+  </script>
+</body>
+</html>
